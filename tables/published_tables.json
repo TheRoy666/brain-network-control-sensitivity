@@ -35,7 +35,7 @@
     "Scanners",
     "Siemens 3T Skyra, single site",
     "Siemens 24, GE 16, Philips 9; multi-site",
-    "single site"
+    "Philips 3T Achieva TX, single site"
    ],
    [
     "Resting-state timepoints",
@@ -47,7 +47,7 @@
     "Repetition time",
     "0.72 s",
     "about 3 s",
-    "[CONFIRM]"
+    "2 s"
    ],
    [
     "Parcellation (regions)",

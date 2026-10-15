@@ -74,9 +74,11 @@ def main():
     rep.check("S4 conditions the sweep missed, in all", sum(missed.values()), 17, digits=0)
     for m, le, lq, uq, re_, rlq, ruq, fe, fr in (
             ("fhn", -3.21, -5.35, -1.08, -1.02, -1.54, -0.53, 24.7, 2.8),
-            ("sl", -3.59, None, None, -0.86, None, None, 36.3, 2.4),
+            ("sl", -3.32, None, None, -0.80, None, None, 27.6, 2.2),
             ("wc", -0.78, None, None, -0.83, None, None, 2.2, 2.3)):
         d = usable[m][usable[m].dominated_ltv.astype(bool)]
+        if m == "sl":   # S4: supercritical magnitudes are quoted at the anchor, not pooled over all six regimes
+            d = d[d.regime == "supercritical_ref"]
         lE, lR = np.log(d.dom_energy_ratio_ltv), np.log(d.dom_err_ratio_ltv)
         rep.check(f"{MODELS[m]}: median log energy ratio", lE.median(), le)
         rep.check(f"{MODELS[m]}: median log error ratio", lR.median(), re_)
@@ -100,10 +102,10 @@ def main():
     rep.check("Stuart–Landau subcritical: energy, times less", np.exp(-np.log(ds.dom_energy_ratio_ltv).median()), 72.5)
     sup = C["sl"][C["sl"].regime.str.startswith("super")]
     med = sup.groupby("regime")[["ltv_err", "ltv_energy"]].median()
-    rep.check("S4 supercritical: absolute errors across the three, max/min - 1 ('factor of one')",
-              med.ltv_err.max() / med.ltv_err.min() - 1, 1, digits=0, note="the errors differ two-fold")
-    rep.check("S4 supercritical: energies, max/min - 1 ('factor of three')",
-              med.ltv_energy.max() / med.ltv_energy.min() - 1, 3, digits=0, note="the energies differ four-fold")
+    rep.check("S4 supercritical: absolute errors across the three differ by a factor of",
+              med.ltv_err.max() / med.ltv_err.min(), 2, digits=0)
+    rep.check("S4 supercritical: energies across the three differ by a factor of",
+              med.ltv_energy.max() / med.ltv_energy.min(), 4, digits=0)
     sd = cond["sl"][cond["sl"].regime.str.startswith("super")].groupby("regime").dom_energy_ratio_ltv.median()
     rep.check("S4 supercritical: dominance energy ratios identical across the three (relative spread)",
               (sd.max() - sd.min()) / sd.min(), "<=0.07", kind="range", lo=0, hi=0.07)
@@ -146,11 +148,8 @@ def main():
     rr = runs["wc"]
     dom = rr[(rr.err < rr.ltv_err) & (rr.energy < rr.ltv_energy)]
     low = dom.groupby("condition_id").energy.min()
-    rep.check("S8 linear method's energy, median (all 40 conditions)", w.ltv_energy.median(), 371, digits=0)
-    rep.check("S8 lowest-energy dominating input, median energy (all 40 conditions)", low.median(), 4e-5, kind="sci")
-    rep.check("S8 linear method's energy, the 20 failing conditions (text's scope)", w[f].ltv_energy.median(), 371, digits=0,
-              note="the sentence places 4e-5 against 371 in the failing conditions; there the values are "
-                   f"{low.reindex(w[f].index).median():.1e} against {w[f].ltv_energy.median():.0f}")
+    rep.check("S8 failing conditions: lowest-energy dominating input, median energy", low.reindex(w[f].index).median(), 8.7e-7, kind="sci")
+    rep.check("S8 failing conditions: linear method's energy, median", w[f].ltv_energy.median(), 761, digits=0)
 
     sys.exit(rep.finish())
 

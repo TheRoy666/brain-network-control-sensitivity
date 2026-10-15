@@ -141,10 +141,10 @@ def main():
               note="as compare_frozen_vs_published.py; its bootstrap gives the 66-72% interval")
     rep.check("S8 median fold change, states fixed", (F[600] / F[4800]).median(), 2.88)
     rep.check("S8 median fold change, states recomputed", (P[600] / P[4800]).median(), 4.75)
-    rep.check("S8 paired Wilcoxon p, fold change fixed vs recomputed", stats.wilcoxon(F[600] / F[4800], P[600] / P[4800]).pvalue,
-              8.5e-41, kind="sci", note=f"fixed lower in {int((F[600] < P[600]).sum())} of {len(F)}; "
-              f"8.5e-41 is the p of the rise with states fixed, F600 vs F4800 = {stats.wilcoxon(F[600], F[4800]).pvalue:.1e}; "
-              f"compare_frozen_vs_published.py prints the paired fixed-vs-recomputed test at 600 as {stats.wilcoxon(F[600], P[600]).pvalue:.1e}")
+    rep.check("S8 rise with states fixed, Wilcoxon p (600 against 4800)", stats.wilcoxon(F[600], F[4800]).pvalue, 8.5e-41, kind="sci")
+    rep.check("S8 rise smaller with states fixed, subjects", int((F[600] / F[4800] < P[600] / P[4800]).sum()), 226, digits=0)
+    rep.check("S8 fold change fixed against recomputed, paired Wilcoxon p", stats.wilcoxon(F[600] / F[4800], P[600] / P[4800]).pvalue,
+              1.4e-39, kind="sci")
     share = np.log(F[600] / F[4800]) / np.log(P[600] / P[4800])
     rep.check("S8 more than half of the rise preserved, fraction of subjects (%)", 100 * (share > 0.5).mean(), 90, digits=0)
     st = pd.read_csv(R("01_operator_divergence/operator_divergence_stride_HCP.csv"))
