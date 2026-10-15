@@ -83,7 +83,9 @@ def main():
     rep.check("subjects analyzed", len(fs), 336, digits=0)
     rep.check("SD rises with strength in every subject, fraction", (fs.spearman_rho_strength_vs_raw_std > 0).mean(), 1.0, digits=2)
     for k, v in (("ADNI-400", -0.979), ("ADNI-450", -0.975)):
-        rep.check(f"{k} median Spearman, strength vs CV", fs[fs.arm == k].spearman_rho_strength_vs_coefficient_of_variation.median(), v)
+        rep.check(f"{k} median Spearman, strength vs CV", fs[fs.arm == k].spearman_rho_strength_vs_coefficient_of_variation.median(), v,
+                  note="the text was written from the run before the estimator convergence fix (-0.978, -0.975); "
+                       "these deposited values are the rerun")
 
     rep.section("2.5 HCP truncated, published penalty setting (driver unless stated)")
     n = pd.read_csv(R("02_ec_uncertainty/ntr_published_setting.csv"))

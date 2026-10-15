@@ -21,6 +21,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, ".."))
 import localize_critical_displacement as L  # noqa: E402
+from error_tolerance_threshold import tolerance_thresholds  # noqa: E402
 from reported import Report  # noqa: E402
 
 ARMS = ["HCP", "ADNI-400", "ADNI-450"]
@@ -40,19 +41,6 @@ def first_descent(ts, fr, c=0.5):
     x, y = np.log(np.asarray(ts)), np.asarray(fr)
     k = next(k for k in range(len(x) - 1) if y[k] >= c > y[k + 1])
     return float(np.exp(x[k] + (y[k] - c) / (y[k] - y[k + 1]) * (x[k + 1] - x[k])))
-
-
-def tolerance_crossing(per, thr=0.05):
-    """Displacement where the cohort-median error (per subject averaged over
-    horizon and direction) reaches thr, at best, mean and worst coupling;
-    linear interpolation in log displacement."""
-    g = per.groupby(["target_scale", "w_EE"]).rel_reachability_error.median().unstack()
-    out = {}
-    for k, v in (("best", g.min(axis=1)), ("mean", g.mean(axis=1)), ("worst", g.max(axis=1))):
-        ts, y = v.index.values, v.values
-        out[k] = next((float(np.exp(np.log(ts[i]) + (thr - y[i]) / (y[i + 1] - y[i]) * (np.log(ts[i + 1]) - np.log(ts[i]))))
-                       for i in range(len(y) - 1) if y[i] < thr <= y[i + 1]), np.nan)
-    return out
 
 
 def main():
@@ -130,19 +118,18 @@ def main():
     rep.check("HCP cohort median error, lowest coupling", hs.iloc[0], 0.0428)
     rep.check("HCP cohort median error, highest coupling", hs.iloc[-1], 0.0356)
     rep.check("falls monotonically with coupling", bool(np.all(np.diff(hs.values) < 0)), True)
-    tol = {}
+    tol = {k: tolerance_thresholds(S[k]) for k in ("HCP", "ADNI-400")}
     for k in ("HCP", "ADNI-400"):
-        per = S[k].groupby(["subject_id", "target_scale", "w_EE"]).rel_reachability_error.mean().reset_index()
-        tol[k] = tolerance_crossing(per)
-        g10 = per.groupby(["target_scale", "w_EE"]).rel_reachability_error.median().unstack()
-        rep.check(f"{k}: no 10% breach at best, worst or mean coupling", bool(g10.max(axis=1).max() < 0.10), True)
-    vals = [v for t in tol.values() for v in t.values()]
+        rep.check(f"{k}: no 10% breach at best, worst or mean coupling",
+                  all(np.isnan(tol[k][(c, 0.10)]) for c in ("best", "mean", "worst")), True)
+    vals = [tol[k][(c, 0.05)] for k in tol for c in ("best", "mean", "worst")]
     rep.check("5% tolerance crossed from (lowest across cohort and coupling)", min(vals), 0.055)
     rep.check("5% tolerance crossed up to (highest)", max(vals), 0.078)
     rep.check("5% tolerance, cohort difference at mean coupling (%)",
-              100 * abs(tol["HCP"]["mean"] - tol["ADNI-400"]["mean"]) / tol["ADNI-400"]["mean"], 0.9)
+              100 * abs(tol["HCP"][("mean", 0.05)] - tol["ADNI-400"][("mean", 0.05)]) / tol["ADNI-400"][("mean", 0.05)], 0.9,
+              note="error_tolerance_threshold.py: 0.0648 against 0.0642")
     rep.check("5% tolerance, worst-case coupling not resolved (within one grid interval)",
-              abs(tol["HCP"]["worst"] - tol["ADNI-400"]["worst"]) < 0.01, True)
+              abs(tol["HCP"][("worst", 0.05)] - tol["ADNI-400"][("worst", 0.05)]) < 0.01, True)
 
     rep.section("2.9 Numerical error")
     nx = pd.concat([pd.read_csv(R(f"linearization_vs_numerical_error_{k}.csv")) for k in ARMS])

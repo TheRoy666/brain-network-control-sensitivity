@@ -181,6 +181,8 @@ Hashes are the first 12 hex digits of SHA-256 over the file with LF line endings
 | `tests/test_driver_definition.py` | driver and receiver definitions on planted senders and receivers |
 | `pipeline/*/reported_values.py, pipeline/reported.py` | every number in the text recomputed from `results/` and compared with the paper |
 | `pipeline/02_ec_uncertainty/nctpy_definition_check.py` | nctpy 1.1.0 and 1.2.0 `ave_control` on planted operators (Methods 4.5) |
+| `pipeline/01_operator_divergence/synthetic_chain_operator_check.py` | directed against symmetric operators on a simulated feedforward chain |
+| `pipeline/03_linearization/error_tolerance_threshold.py` | the error-tolerance threshold of Supplementary S8 |
 | `tables/check_tables.py` | Table 1 and Tables S1-S3 from `results/`, with a cell-by-cell check against the paper |
 | `tables/published_tables.json` | table values as printed in the paper |
 | `README.md, ORIGIN.md, docs/*.md, pipeline/*/README.md` | documentation of the study flow |

@@ -53,7 +53,7 @@ def main():
         sig = se[se.significant.astype(bool)]
         if p == "400":
             rep.check("metrics with a significant site effect", len(sig), 4, digits=0)
-            rep.check("eta-squared, lowest significant", sig.eta2.min(), 0.157)
+            rep.check("eta-squared, lowest significant", sig.eta2.min(), 0.157, note="0.1564 rounds to 0.156")
             rep.check("eta-squared, highest", sig.eta2.max(), 0.251)
         else:
             rep.check("ADNI-450 eta-squared, highest", se.eta2.max(), 0.317)

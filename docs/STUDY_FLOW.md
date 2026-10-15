@@ -33,7 +33,8 @@ Cohorts and acquisition: **Table 1** (`tables/check_tables.py`). Cohort numbers 
 | Truncating HCP from 4800 to 600 timepoints raises the ratio from 3.2 to 15.0, and to 9.3 with the states held fixed; subsampling to ADNI's sampling rate | `build_truncation_ladder.py`, `operator_divergence_vs_length.py`, `compare_frozen_vs_published.py` | `operator_divergence_vs_length_*.csv`, `operator_divergence_frozen_states_HCP.csv`, `operator_divergence_stride_HCP.csv` | **Figure 1a**, **Table S1** |
 | Within ADNI, the ratio by scanner manufacturer | as above | `directions_ADNI-400.csv` with `R/05_clinical/adni_results_400.csv` | **Figure 1b** |
 | Finite-horizon energy exceeds the infinite-horizon estimate at short horizons | `run_hcp_aud_batch.py`, `run_adni_nctn_batch.py` | `R/05_clinical/adni_finite_vs_infinite_*.csv` (HCP not deposited) | text |
-| Incoming and outgoing strength inversely related in HCP and epilepsy, not in ADNI (eight subjects per cohort) | `manjunatha_hub_asymmetry_check.py` | `in_out_strength_*.csv` | text |
+| Incoming and outgoing strength inversely related in HCP and epilepsy, not in ADNI (eight subjects per cohort; estimator before its convergence fix) | `manjunatha_hub_asymmetry_check.py` | `in_out_strength_*.csv` | text |
+| On a simulated feedforward chain, whether a symmetric operator raises or lowers minimum energy depends on how it is built and scaled | `synthetic_chain_operator_check.py` | printed | text |
 
 ## 02 · Estimation uncertainty and driver rankings
 
@@ -62,6 +63,7 @@ Cohorts and acquisition: **Table 1** (`tables/check_tables.py`). Cohort numbers 
 | Stability boundary per cohort and coupling grid | `real_coupling_boundary_recheck.py`, `check_subject_coupling.py`, `fixed_point_scale_check.py` | `fixed_point_scale_check.csv` | Supplementary Methods |
 | Linearized control has low median endpoint error (3.4%); the interior error minimum disappears above a critical displacement that differs by cohort | `wc_linear_validity_sweep_real_coupling.py` (with `--target-scales` for the fine grid), `localize_critical_displacement.py` | `fine_sweep/wc_sweep_finets_*.csv.gz`; first sweep in `coarse_sweep/` | **Figure 4** |
 | Numerical error is a negligible share of the total | `linearization_vs_numerical_error.py` | `linearization_vs_numerical_error_*.csv` | text; S8 |
+| No 10% breach anywhere; a 5% tolerance is crossed between 0.055 and 0.078, and the cohorts are 0.9% apart at mean coupling | `error_tolerance_threshold.py` | `fine_sweep/wc_sweep_finets_*.csv.gz` | S8 |
 | Non-normality does not explain the transition (measured at the highest coupling) | `measure_non_normality.py` | `non_normality_*.csv` | text; S8 |
 | The cohort difference persists under degree-preserving rewiring | `null_model_rewiring.py`, `wc_linear_validity_sweep_null_model.py`, `network_topology_characterization.py` | `fine_sweep/wc_null_finets_*`, `coarse_sweep/wc_null_*`, `network_topology_*.csv` | Supplementary S2 |
 | No combining form of energy and amplification beats a majority-class baseline | `mechanism_functional_form_search.py`, `mechanism_search_v2.py` | printed | Supplementary S2 |

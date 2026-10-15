@@ -9,6 +9,7 @@ Places a Wilson–Cowan model on each subject's connectome, computes minimum-ene
 | 3 | `check_subject_coupling.py`, `fixed_point_scale_check.py` | the one missing (subject, coupling) cell; fixed-point scale by cohort | `fixed_point_scale_check.csv` |
 | 4 | `localize_critical_displacement.py` | interior-minimum fraction by displacement; critical displacement with bootstrap interval | printed |
 | 5 | `linearization_vs_numerical_error.py` | the same controls applied to the linear system, to separate numerical from linearization error | `linearization_vs_numerical_error_*.csv` |
+| 5b | `error_tolerance_threshold.py` | the threshold defined by an error tolerance: displacement at which the share of subjects within 5% or 10% error falls through one half, at best, mean and worst coupling (Supplementary S8) | printed |
 | 6 | `measure_non_normality.py` | non-normality of the Jacobian and coupling, against each subject's threshold | `non_normality_*.csv` |
 | 7 | `null_model_rewiring.py`, `wc_linear_validity_sweep_null_model.py` | the sweep repeated on degree-preserving rewired connectomes | `fine_sweep/wc_null_finets_*`, `coarse_sweep/wc_null_*` |
 | 8 | `network_topology_characterization.py` | hub concentration and rich-club structure of the connectomes | `network_topology_*.csv` |

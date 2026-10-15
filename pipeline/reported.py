@@ -39,8 +39,9 @@ class Report:
             ok = lo <= value <= hi
             shown = f"{value:.4g}"
         elif kind == "sci":
-            # same mantissa to two significant figures and same exponent
-            ok = f"{value:.1e}" == f"{float(reported):.1e}"
+            # same mantissa to the significant figures printed, and same exponent
+            sig = len(f"{float(reported):e}".split("e")[0].rstrip("0").replace(".", "").replace("-", "")) or 1
+            ok = f"{value:.{sig - 1}e}" == f"{float(reported):.{sig - 1}e}"
             shown = f"{value:.2e}"
         else:
             d = _decimals(reported) if digits is None else digits

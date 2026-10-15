@@ -141,12 +141,16 @@ def main():
     rep.check("S4 other conditions: median target distance", w[~f].target_distance.median(), 1.32)
     rep.check("S4 failing: median absolute endpoint error", (w.ltv_err * w.target_distance)[f].median(), 1.68)
     rep.check("S4 others: median absolute endpoint error", (w.ltv_err * w.target_distance)[~f].median(), 0.23)
-    rep.check("S8 linear method's energy, median over all Wilson–Cowan conditions", w.ltv_energy.median(), 371, digits=0,
-              note=f"over the 20 failing conditions it is {w[f].ltv_energy.median():.0f}")
+    # The two energies in this sentence were computed over all 40 Wilson–Cowan conditions;
+    # the sentence attributes them to the 20 failing ones. Both scopes are printed.
     rr = runs["wc"]
-    dom = rr[(rr.err < rr.ltv_err) & (rr.energy < rr.ltv_energy) & rr.condition_id.isin(w[f].index)]
-    rep.check("S8 near-zero dominating input in failing conditions, median energy", dom.groupby("condition_id").energy.min().median(),
-              4e-5, kind="sci", note="lowest-energy dominating run per condition")
+    dom = rr[(rr.err < rr.ltv_err) & (rr.energy < rr.ltv_energy)]
+    low = dom.groupby("condition_id").energy.min()
+    rep.check("S8 linear method's energy, median (all 40 conditions)", w.ltv_energy.median(), 371, digits=0)
+    rep.check("S8 lowest-energy dominating input, median energy (all 40 conditions)", low.median(), 4e-5, kind="sci")
+    rep.check("S8 linear method's energy, the 20 failing conditions (text's scope)", w[f].ltv_energy.median(), 371, digits=0,
+              note="the sentence places 4e-5 against 371 in the failing conditions; there the values are "
+                   f"{low.reindex(w[f].index).median():.1e} against {w[f].ltv_energy.median():.0f}")
 
     sys.exit(rep.finish())
 

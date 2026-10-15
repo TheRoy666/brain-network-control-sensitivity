@@ -9,7 +9,8 @@ Compares minimum control energy under the functional-connectivity operator and u
 | 3 | `build_truncation_ladder.py` | truncated and subsampled HCP timeseries | — |
 | 4 | `operator_divergence_vs_length.py` | the ratio as HCP recordings shrink from 4800 to 600 timepoints, with states recomputed or held fixed, and at ADNI's sampling rate; ADNI at its own lengths | `01_operator_divergence/operator_divergence_*.csv` |
 | 5 | `compare_frozen_vs_published.py` | summary of the held-fixed run against the recomputed one | printed |
-| 6 | `manjunatha_hub_asymmetry_check.py` | rank correlation of each region's incoming and outgoing EC strength, per subject (eight subjects per cohort) | `01_operator_divergence/in_out_strength_*.csv` |
+| 6 | `manjunatha_hub_asymmetry_check.py` | rank correlation of each region's incoming and outgoing EC strength, per subject (eight subjects per cohort; EC matrices from the estimator before its convergence fix, see `02_ec_uncertainty/estimator_convergence/`) | `01_operator_divergence/in_out_strength_*.csv` |
+| — | `synthetic_chain_operator_check.py` | minimum energy under directed and symmetric operators on a simulated feedforward chain, with the operators built as for the cohorts and, separately, from the generating chain | printed |
 
 Shown in Figure 1 and Supplementary Table S1.
 
