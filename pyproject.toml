@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nctsens"
+version = "1.0.0"
+description = "Analysis code for brain-network-control-sensitivity: operator choice, estimation uncertainty and linearization in network control theory"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{ name = "Ritam Kanti Roy" }]
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "scikit-learn>=1.2",
+  "pandas>=1.5",
+  "matplotlib>=3.6",
+  "statsmodels>=0.14",
+]
+
+[project.optional-dependencies]
+neuroimaging = ["nibabel>=4.0", "nilearn>=0.10", "joblib>=1.2"]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Upstream = "https://github.com/TheRoy666/NeuroSim"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["nctsens*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--tb=short -q"

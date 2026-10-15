@@ -1,0 +1,9 @@
+brain-network-control-sensitivity
+Copyright 2026 Ritam Kanti Roy
+
+This repository contains code derived from NeuroSim
+(https://github.com/TheRoy666/NeuroSim), developed by Ritam Kanti Roy during
+Google Summer of Code 2026 with the International Neuroinformatics
+Coordinating Facility (INCF), project 39, and licensed under the Apache
+License, Version 2.0. The files taken from NeuroSim, and every change made
+to them, are listed in ORIGIN.md.

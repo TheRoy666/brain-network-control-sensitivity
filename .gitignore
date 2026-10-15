@@ -1,0 +1,22 @@
+# Never commit subject keys or source data
+*_LOCAL_ONLY_*
+*DO_NOT_COMMIT*
+*subject_key*
+*pair_key*
+data/
+*.nii
+*.nii.gz
+*_timeseries.npy
+*_SC_*.csv
+EC_boot*/
+
+# Build and cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# Regenerated outputs
+tables/out/
