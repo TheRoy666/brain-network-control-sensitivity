@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use this code or these results, please cite the paper below."
+title: "brain-network-control-sensitivity"
+abstract: "Code and derived results for a study of how operator specification, estimation uncertainty and linearization shape network control analyses of brain data."
+type: software
+version: 1.0.0
+license: Apache-2.0
+repository-code: "https://github.com/TheRoy666/brain-network-control-sensitivity"
+authors:
+  - family-names: Roy
+    given-names: Ritam Kanti
+keywords:
+  - network control theory
+  - effective connectivity
+  - controllability
+  - reproducibility
+  - neuroimaging
+preferred-citation:
+  type: article
+  title: "How operator specification, estimation uncertainty and linearization shape brain network control"
+  authors:
+    - family-names: Roy
+      given-names: Ritam Kanti
+    - family-names: Agarwal
+      given-names: Khushbu
+  notes: "Manuscript in preparation."
+references:
+  - type: software
+    title: "NeuroSim"
+    authors:
+      - family-names: Roy
+        given-names: Ritam Kanti
+    repository-code: "https://github.com/TheRoy666/NeuroSim"
+    notes: "Developed during Google Summer of Code 2026 with the International Neuroinformatics Coordinating Facility (INCF), project 39."
+    license: Apache-2.0
