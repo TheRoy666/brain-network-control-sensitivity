@@ -65,7 +65,7 @@ Hashes are the first 12 hex digits of SHA-256 over the file with LF line endings
 | `build_truncation_ladder.py` | `scripts/path1_upscale/build_truncation_ladder.py` | not yet upstream | — | `f45eb9b88745` | unchanged |
 | `compare_frozen_vs_published.py` | `scripts/path1_upscale/compare_frozen_vs_published.py` | not yet upstream | — | `973bd5521e26` | unchanged |
 | `operator_divergence_both_directions.py` | — | paper only | — | `9cd94bed5d29` | unchanged |
-| `manjunatha_hub_asymmetry_check.py` | `scripts/manjunatha_hub_asymmetry_check.py` | identical | `d008b6a6500b` | `d008b6a6500b` | unchanged |
+| `manjunatha_hub_asymmetry_check.py` | `scripts/manjunatha_hub_asymmetry_check.py` | identical | `d008b6a6500b` | `34f95bc64f3d` | in- and out-strength labels follow the paper's convention (row sums received); values unchanged |
 
 ## `pipeline/02_ec_uncertainty`
 

@@ -7,7 +7,7 @@ are trivially identical -- on real per-subject EC matrices computed by
 compute_and_save_ec_matrices.py.
 
 For each subject's EC matrix:
-1. Compute in-strength (column sums) and out-strength (row sums) per node.
+1. Compute in-strength (row sums) and out-strength (column sums) per node.
 2. Correlate them directly across all nodes -- low correlation means
    directionality genuinely matters for identifying "important" nodes.
 3. Identify top-K in-hubs and top-K out-hubs, compute their overlap --
@@ -52,8 +52,12 @@ def analyze_subject(ec_path, top_k):
     EC_abs = np.abs(EC)
     np.fill_diagonal(EC_abs, 0)
 
-    out_strength = EC_abs.sum(axis=1)  # row sums -- influence exerted
-    in_strength = EC_abs.sum(axis=0)   # column sums -- influence received
+    # x(t+1) = A x(t), so A[i, j] is the influence of region j on region i:
+    # row i holds what region i receives, column j what region j exerts.
+    # (The rank correlation and the hub overlap are symmetric in the two,
+    # so the deposited values do not depend on which sum carries which name.)
+    in_strength = EC_abs.sum(axis=1)   # row sums -- influence received
+    out_strength = EC_abs.sum(axis=0)  # column sums -- influence exerted
 
     rho, p = spearmanr(out_strength, in_strength)
 

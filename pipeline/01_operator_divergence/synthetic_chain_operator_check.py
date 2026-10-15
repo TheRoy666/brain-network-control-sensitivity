@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
 """
-synthetic_chain_operator_check.py — does a symmetric operator raise or lower
-minimum control energy on a feedforward chain whose true direction is known?
+synthetic_chain_operator_check.py — minimum control energy under directed and
+symmetric operators on a simulated feedforward chain, whose true direction of
+influence is known (Results 2.1).
 
-Two constructions are compared, because they answer different questions.
+Each chain, region 1 -> 2 -> ... -> n with weight 0.85 and noise 0.1, is
+simulated for 8000 timepoints and processed as the cohorts are (Methods 4.5,
+4.6): a directed autoregressive estimate (ridge weight 1; the chain has no
+structural connectome, so the structural-prior term is absent), the functional
+operator (Pearson correlation after detrending, zero diagonal), and the
+symmetrized estimate (A + A')/2, each rescaled to spectral radius 0.9; input at
+every region; horizon 10; states from the recording by the cohort rule (mean of
+the lowest- and highest-variance fifths of timepoints, unit norm).
 
-1. Operators estimated from simulated data, processed exactly as the cohorts
-   are (Methods): a directed ridge effective-connectivity estimate, and either
-   the functional connectivity of the same data or the symmetrized estimate,
-   each normalized to spectral radius 0.9. This is the comparison the human
-   results make.
-
-2. The generating chain itself against symmetric versions of it with no
-   rescaling: (A + A')/2, which halves each connection and adds its reverse,
-   and A + A', which adds reverse connections at full weight.
-
-Energy is the minimum control energy (nctsens.physics.minimum_energy, input
-at every node) for random transitions between unit-variance states; the ratio
-is symmetric over directed, and a ratio above one means the symmetric operator
-needs more energy.
+Printed for each chain length: the median over simulated recordings of the
+energy ratio, symmetric or functional over directed, for both transitions and
+for random transitions, and the share of recordings in which the ratio exceeds
+one. Two sensitivity analyses follow: a three-step horizon, and symmetric
+versions of the generating chain itself without rescaling.
 
     python3 pipeline/01_operator_divergence/synthetic_chain_operator_check.py [--n-seeds 50]
 """
@@ -29,64 +28,72 @@ import numpy as np
 from nctsens.connectivity import functional_connectivity, ridge_effective_connectivity, simulate_feedforward_network
 from nctsens.physics import minimum_energy, normalise_matrix
 
-
-def median_ratio(directed, symmetric, horizon, rng, n_transitions):
-    n = directed.shape[0]
-    B = np.eye(n)
-    r = []
-    for _ in range(n_transitions):
-        x0, xT = rng.standard_normal((2, n))
-        r.append(minimum_energy(symmetric, B, x0, xT, horizon)[0] / minimum_energy(directed, B, x0, xT, horizon)[0])
-    return float(np.median(r))
+LENGTHS = (3, 5, 10, 20)
+HORIZON = 10
 
 
-def chain(n, w):
-    A = np.zeros((n, n))
-    A[np.arange(1, n), np.arange(n - 1)] = w
-    return A
+def states(X):
+    """Cohort rule: quiescent and high-variance states, unit norm."""
+    n = max(1, X.shape[1] // 5)
+    idx = np.argsort(X.var(axis=0))
+    q, h = X[:, idx[:n]].mean(axis=1), X[:, idx[-n:]].mean(axis=1)
+    return q / np.linalg.norm(q), h / np.linalg.norm(h)
+
+
+def ratio(other, directed, x0, xT, horizon):
+    B = np.eye(directed.shape[0])
+    return minimum_energy(other, B, x0, xT, horizon)[0] / minimum_energy(directed, B, x0, xT, horizon)[0]
+
+
+def operators(n, seed):
+    X, A = simulate_feedforward_network(n_nodes=n, n_timepoints=8000, causal_weight=0.85, noise_std=0.1, seed=seed)
+    ec = ridge_effective_connectivity(X, alpha=1.0)
+    ops = {"directed": normalise_matrix(ec, target_rho=0.9),
+           "functional": normalise_matrix(functional_connectivity(X), target_rho=0.9),
+           "symmetrized": normalise_matrix((ec + ec.T) / 2, target_rho=0.9)}
+    return X, A, ops
+
+
+def summary(values):
+    v = np.asarray(values)
+    return f"{np.median(v):5.2f} ({np.mean(v > 1):4.0%} > 1)"
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--n-seeds", type=int, default=50)
-    ap.add_argument("--n-transitions", type=int, default=200)
+    ap.add_argument("--n-random", type=int, default=100, help="random transitions per recording")
     a = ap.parse_args()
     rng = np.random.default_rng(0)
 
-    print("1. Estimated operators, normalized to spectral radius 0.9 (the cohort pipeline)")
-    print(f"   median over {a.n_seeds} simulated recordings of the per-recording median ratio; share of recordings above one")
-    for n in (3, 10):
-        for horizon in (3, 8):
-            ratios = {"functional": [], "symmetrized": []}
+    for horizon, title in ((HORIZON, "cohort settings, horizon 10"), (3, "sensitivity: horizon 3")):
+        print(f"\n{title}: energy ratio over the directed estimate, median over {a.n_seeds} recordings (share above one)")
+        print(f"  {'regions':>7}  {'operator':11s}  {'high-var -> quiescent':>22}  {'quiescent -> high-var':>22}  {'random':>16}")
+        for n in LENGTHS:
+            r = {k: {"h2q": [], "q2h": [], "rand": []} for k in ("functional", "symmetrized")}
             for seed in range(a.n_seeds):
-                X, _ = simulate_feedforward_network(n_nodes=n, n_timepoints=8000, causal_weight=0.85, noise_std=0.1, seed=seed)
-                ec = ridge_effective_connectivity(X, alpha=0.1)
-                directed = normalise_matrix(ec, target_rho=0.9)
-                ratios["functional"].append(median_ratio(directed, normalise_matrix(functional_connectivity(X), target_rho=0.9),
-                                                         horizon, rng, a.n_transitions))
-                ratios["symmetrized"].append(median_ratio(directed, normalise_matrix((ec + ec.T) / 2, target_rho=0.9),
-                                                          horizon, rng, a.n_transitions))
-            for k, v in ratios.items():
-                v = np.asarray(v)
-                print(f"   {n:2d} nodes, horizon {horizon}, {k:11s}  ratio {np.median(v):5.2f}  above one in {np.mean(v > 1):4.0%}")
+                X, _, ops = operators(n, seed)
+                q, h = states(X)
+                for k in r:
+                    r[k]["h2q"].append(ratio(ops[k], ops["directed"], h, q, horizon))
+                    r[k]["q2h"].append(ratio(ops[k], ops["directed"], q, h, horizon))
+                    r[k]["rand"].append(np.median([ratio(ops[k], ops["directed"], *rng.standard_normal((2, n)), horizon)
+                                                   for _ in range(a.n_random)]))
+            for k in r:
+                print(f"  {n:>7}  {k:11s}  {summary(r[k]['h2q']):>22}  {summary(r[k]['q2h']):>22}  {summary(r[k]['rand']):>16}")
 
-    print("\n2. The generating chain against symmetric versions, no rescaling")
+    print("\nsensitivity: the generating chain against symmetric versions of it, no rescaling, random transitions")
     for n in (3, 10):
-        for w in (0.5, 0.85):
-            A = chain(n, w)
-            for name, S in (("(A + A')/2", (A + A.T) / 2), ("A + A'", A + A.T)):
-                rho = float(np.max(np.abs(np.linalg.eigvals(S))))
-                if rho >= 1:
-                    print(f"   {n:2d} nodes, weight {w}, {name:10s} unstable (spectral radius {rho:.2f}); not computed")
-                    continue
-                for horizon in (3, 8):
-                    r = median_ratio(A, S, horizon, rng, 500)
-                    print(f"   {n:2d} nodes, weight {w}, {name:10s} horizon {horizon}  ratio {r:5.2f}")
-
-    print("\nReading: whether a symmetric operator is cheaper depends on how it is built and scaled. Under the")
-    print("cohort pipeline it is costlier in most settings, as in every human subject; it is cheaper when reverse")
-    print("connections are added at full weight without rescaling (which can make the operator unstable), and in")
-    print("the 10-node chain at the short horizon.")
+        A = np.zeros((n, n))
+        A[np.arange(1, n), np.arange(n - 1)] = 0.85
+        for name, S in (("(A + A')/2", (A + A.T) / 2), ("A + A'", A + A.T)):
+            rho = float(np.max(np.abs(np.linalg.eigvals(S))))
+            if rho >= 1:
+                print(f"  {n:>2} regions  {name:10s} unstable (spectral radius {rho:.2f}); not computed")
+                continue
+            for horizon in (3, HORIZON):
+                v = np.median([ratio(S, A, *rng.standard_normal((2, n)), horizon) for _ in range(500)])
+                print(f"  {n:>2} regions  {name:10s} horizon {horizon:>2}  ratio {v:5.2f}")
 
 
 if __name__ == "__main__":
