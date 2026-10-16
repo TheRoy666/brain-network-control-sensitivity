@@ -66,7 +66,7 @@ src/nctsens/        analysis package (vendored from NeuroSim; see ORIGIN.md)
 pipeline/
   00_preprocessing/       containers, regional timeseries, connectomes, QC
   01_operator_divergence/ FC versus EC control energy; recording length
-  02_ec_uncertainty/      bootstrap EC, driver rankings, sensitivity sweeps
+  02_ec_uncertainty/      bootstrap EC, driver rankings, sensitivity sweeps, brain maps
   03_linearization/       linearized versus nonlinear control on connectomes
   04_nonlinear_control/   adjoint-gradient control in three oscillator models
   05_clinical/            exploratory clinical contrasts (Supplementary S1)
@@ -74,7 +74,7 @@ pipeline/
 results/            deposited outputs of each stage, pseudonymized
 tables/             the published table values and the script that checks them
 docs/               study flow, data access, definitions, analysis plans
-tests/              unit tests for the package
+tests/              unit tests for the package and the brain-map computation
 ```
 
 Each `pipeline/` stage has a README with its inputs, outputs and commands, and a `reported_values.py` that recomputes every number the paper reports for that stage from `results/` and compares it with the printed value.
@@ -83,7 +83,7 @@ Each `pipeline/` stage has a README with its inputs, outputs and commands, and a
 
 ```bash
 pip install -e ".[dev]"     # Python >= 3.10; requirements.txt pins the versions used
-make test                   # unit tests for the package
+make test                   # unit tests
 make values                 # every number in the text, recomputed from results/ and compared with the paper
 make tables                 # Table 1 and Tables S1-S3 from results/, compared cell by cell with the paper
 ```

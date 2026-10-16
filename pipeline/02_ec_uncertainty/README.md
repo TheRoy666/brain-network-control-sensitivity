@@ -13,6 +13,7 @@ Propagates the uncertainty of the effective-connectivity estimate into the ranki
 | 7 | `hcp_motion_vs_tau.py`, `adni_quality_vs_taustability.py` | rank stability against head motion and data-quality measures | printed; Figure S1 is drawn from the files above |
 | 8 | `frassle_stephan_cross_check.py` | connection strength against its variability across resamples | `frassle_stephan_*.csv` |
 | 9 | `nctpy_definition_check.py` | nctpy 1.1.0 and 1.2.0 `ave_control` on planted senders and receivers, against both definitions (runs without data) | printed |
+| 10 | `brain_maps.py` | from the saved ensembles: how often each region is a top-five driver across the 200 resamples, for the subject nearest the cohort median driver τ (checked against `ctrl_definition_comparison_*.csv`), and each region's out-strength minus in-strength averaged over subjects; `export` writes the deposited tables, without per-subject rows | `brain_maps/` |
 | — | `compute_and_save_ec_matrices.py` | point-estimate EC matrices for inspection | — |
 
 Shown in Figures 2, 3 and S1 and Supplementary Tables S2 and S3.

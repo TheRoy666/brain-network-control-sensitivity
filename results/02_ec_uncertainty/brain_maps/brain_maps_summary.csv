@@ -1,0 +1,7 @@
+cohort,map,n_regions,n_resamples,n_subjects,driver_tau,driver_jaccard,mean_top5_shared,selection
+HCP,driver,410,200,1,0.8843641620350547,0.4987461115099306,3.238793969849246,closest to the cohort median driver tau (0.885)
+HCP,sender_receiver,410,,238,,,,all subjects
+ADNI-400,driver,400,200,1,0.32942655382174035,0.03667863125149557,0.3210050251256281,closest to the cohort median driver tau (0.329)
+ADNI-400,sender_receiver,400,,49,,,,all subjects
+ADNI-450,driver,450,200,1,0.3712683427033708,0.04404941373534338,0.3841708542713568,closest to the cohort median driver tau (0.371)
+ADNI-450,sender_receiver,450,,49,,,,all subjects

@@ -183,6 +183,8 @@ Hashes are the first 12 hex digits of SHA-256 over the file with LF line endings
 | `pipeline/02_ec_uncertainty/nctpy_definition_check.py` | nctpy 1.1.0 and 1.2.0 `ave_control` on planted operators (Methods 4.5) |
 | `pipeline/01_operator_divergence/synthetic_chain_operator_check.py` | directed against symmetric operators on a simulated feedforward chain |
 | `pipeline/03_linearization/error_tolerance_threshold.py` | the error-tolerance threshold of Supplementary S8 |
+| `pipeline/02_ec_uncertainty/brain_maps.py` | the per-region values drawn in Figures 1f, 2g and 2h; the computation run on the analysis servers (there as `render_brain_maps.py --no-render`), with an `export` step for the deposited tables |
+| `tests/test_brain_maps.py` | the brain-map driver score, sign convention, row blocks and export |
 | `tables/check_tables.py` | Table 1 and Tables S1-S3 from `results/`, with a cell-by-cell check against the paper |
 | `tables/published_tables.json` | table values as printed in the paper |
 | `README.md, ORIGIN.md, docs/*.md, pipeline/*/README.md` | documentation of the study flow |

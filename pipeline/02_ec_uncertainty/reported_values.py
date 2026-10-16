@@ -210,6 +210,19 @@ def main():
               ((wr[600] < wr[1200]) & (wr[600] < wr[400])).mean(), 1.0, digits=2)
     rep.check("S8 none under the driver ranking", ((w[600] < w[1200]) & (w[600] < w[400])).mean(), 0.0, digits=2)
 
+    rep.section("Figures 1f, 2g, 2h: brain maps (brain_maps.py), against the per-subject results above")
+    ms = pd.read_csv(R("02_ec_uncertainty/brain_maps/brain_maps_summary.csv")).set_index(["cohort", "map"])
+    for k in ARMS:
+        ref = c[k].dropna(subset=["tau_gu", "jaccard_gu"])
+        d = (ref.tau_gu - ref.tau_gu.median()).abs()
+        near = ref[d <= d.min() + 1e-12]           # two subjects when the median falls between them
+        drv = ms.loc[(k, "driver")]
+        rep.check(f"{k}: driver map is a median-tau subject; its top-5 Jaccard matches to 1e-9",
+                  bool(((near.jaccard_gu - drv.driver_jaccard).abs() < 1e-9).any()), True, kind="bool")
+        fr = pd.read_csv(R(f"02_ec_uncertainty/brain_maps/driver_map_{k}.csv")).top5_frequency
+        rep.check(f"{k}: driver map frequencies sum to five regions per resample", fr.sum(), 5.0, digits=9)
+        rep.check(f"{k}: sender map averages every subject", int(ms.loc[(k, "sender_receiver")].n_subjects), len(c[k]), digits=0)
+
     rep.server_only([
         ("Receiver tau 0.857 with HCP subsampled to an effective TR of 2.88 s", "adni_quality_vs_taustability.py header; HCP stride runs need the HCP timeseries"),
         ("Within ADNI, no relationship of receiver stability with tSNR, age or six connectome-quality metrics",
