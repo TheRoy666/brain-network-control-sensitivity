@@ -19,6 +19,7 @@ import sys
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from reported import Report  # noqa: E402
@@ -150,6 +151,9 @@ def main():
     low = dom.groupby("condition_id").energy.min()
     rep.check("S8 failing conditions: lowest-energy dominating input, median energy", low.reindex(w[f].index).median(), 8.7e-7, kind="sci")
     rep.check("S8 failing conditions: linear method's energy, median", w[f].ltv_energy.median(), 761, digits=0)
+    rho, p_rho = stats.spearmanr(w.ltv_err, w.target_distance)
+    rep.check("S4 Wilson–Cowan: relative error against target distance, Spearman", rho, -0.37)
+    rep.check("S4 Wilson–Cowan: relative error against target distance, p", p_rho, 0.02)
 
     sys.exit(rep.finish())
 

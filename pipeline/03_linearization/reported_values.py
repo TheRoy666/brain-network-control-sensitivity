@@ -131,6 +131,11 @@ def main():
     rep.check("5% tolerance, worst-case coupling not resolved (within one grid interval)",
               abs(tol["HCP"][("worst", 0.05)] - tol["ADNI-400"][("worst", 0.05)]) < 0.01, True)
 
+    med = {k: S[k].groupby("target_scale").rel_reachability_error.median() for k in ARMS}
+    rep.check("S4 connectome sweep: median error at 0.005, lowest arm (%)", 100 * min(m.loc[0.005] for m in med.values()), 2.5)
+    rep.check("S4 connectome sweep: median error at 0.005, highest arm (%)", 100 * max(m.loc[0.005] for m in med.values()), 3.0)
+    rep.check("S4 connectome sweep: median error at 0.01, every arm (%)", sorted({round(100 * m.loc[0.01], 1) for m in med.values()}) == [1.8], True)
+
     rep.section("2.9 Numerical error")
     nx = pd.concat([pd.read_csv(R(f"linearization_vs_numerical_error_{k}.csv")) for k in ARMS])
     rep.check("conditions", len(nx), 58500, digits=0)
