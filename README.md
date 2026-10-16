@@ -1,8 +1,15 @@
 # brain-network-control-sensitivity
 
+[![CI](https://github.com/TheRoy666/brain-network-control-sensitivity/actions/workflows/ci.yml/badge.svg)](https://github.com/TheRoy666/brain-network-control-sensitivity/actions/workflows/ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](requirements.txt)
+[![Paper: in preparation](https://img.shields.io/badge/paper-in%20preparation-lightgrey.svg)](#brain-network-control-sensitivity)
+[![Upstream: NeuroSim](https://img.shields.io/badge/upstream-NeuroSim-informational.svg)](https://github.com/TheRoy666/NeuroSim)
+[![GSoC 2026: INCF project 39](https://img.shields.io/badge/GSoC%202026-INCF%20project%2039-orange.svg)](ORIGIN.md)
+
 Code and derived results for
 
-> Roy, R. K., Agarwal, K. *How operator specification, estimation uncertainty and linearization shape brain network control.* Manuscript in preparation.
+> Roy, R. K., Kothekar, R., Agarwal, K. *How operator specification, estimation uncertainty and linearization shape brain network control.* Manuscript in preparation.
 
 Network control theory turns a model of the brain's dynamics into statements about which regions can steer the network and at what energy cost. Three modeling steps sit between the data and those statements, and the paper measures how much each one moves them:
 

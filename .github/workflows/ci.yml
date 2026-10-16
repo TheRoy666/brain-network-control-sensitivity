@@ -1,0 +1,35 @@
+name: CI
+
+# Runs everything that needs only this repository: the unit tests, the brain-map
+# self-test and the cell-by-cell check of the paper's tables against results/.
+# Python and package versions are those used for the paper (requirements.txt).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install pinned versions
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e . --no-deps
+      - name: Unit tests
+        run: python -m pytest
+      - name: Brain-map self-test
+        run: python pipeline/02_ec_uncertainty/brain_maps.py selftest
+      - name: Tables against results/
+        run: make tables
