@@ -141,7 +141,7 @@ Hashes are the first 12 hex digits of SHA-256 over the file with LF line endings
 | `constrained_dominance.py` | `scripts/nonlinear_validity_regime/constrained_dominance.py` | not yet upstream | — | `d0bd1f25f95d` | imports point to nctsens; docstrings name nctsens |
 | `constrained_dominance_sl.py` | `scripts/nonlinear_validity_regime/constrained_dominance_sl.py` | not yet upstream | — | `8e46c9966a53` | imports point to nctsens; docstrings name nctsens |
 | `constrained_dominance_wc.py` | `scripts/nonlinear_validity_regime/constrained_dominance_wc.py` | not yet upstream | — | `780e3f881c6a` | imports point to nctsens; docstrings name nctsens |
-| `fhn_example_trajectories.py` | `scripts/nonlinear_validity_regime/fhn_example_trajectories.py` | not yet upstream | — | `9c8e71422ce9` | imports point to nctsens; docstrings name nctsens |
+| `fhn_example_trajectories.py` | `scripts/nonlinear_validity_regime/fhn_example_trajectories.py` | not yet upstream | — | `3716596a87bb` | imports point to nctsens; docstrings name nctsens; usage notes name the figure panels as published |
 | `fhn_phase_shift_comparison.py` | `scripts/nonlinear_validity_regime/fhn_phase_shift_comparison.py` | identical | `6b61ae244d51` | `629a5980ca0a` | imports point to nctsens |
 | `sl_a2_grid.py` | `scripts/path1_upscale/sl_a2_grid.py` | not yet upstream | — | `66e2fbeaafaa` | imports point to nctsens; docstrings name nctsens |
 | `consolidate_sl_a2_replication.py` | `scripts/path1_upscale/consolidate_sl_a2_replication.py` | not yet upstream | — | `37df4105056d` | unchanged |

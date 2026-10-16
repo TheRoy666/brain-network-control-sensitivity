@@ -12,6 +12,6 @@ Compares minimum control energy under the functional-connectivity operator and u
 | 6 | `manjunatha_hub_asymmetry_check.py` | rank correlation of each region's incoming and outgoing EC strength, per subject (eight subjects per cohort; EC matrices from the estimator before its convergence fix, see `02_ec_uncertainty/estimator_convergence/`) | `01_operator_divergence/in_out_strength_*.csv` |
 | — | `synthetic_chain_operator_check.py` | minimum energy under directed and symmetric operators on a simulated feedforward chain, with the operators built as for the cohorts and, separately, from the generating chain | printed |
 
-Shown in Figure 1 and Supplementary Table S1.
+Shown in Figure 1 (panel f is drawn from `results/02_ec_uncertainty/brain_maps/`) and Supplementary Table S1.
 
 `reported_values.py` recomputes every number the paper reports for this stage from `results/` and prints it beside the printed value (`make values` runs all stages).

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 fhn_example_trajectories.py — trajectories and control signals for ONE
-FitzHugh-Nagumo condition, for the phase-portrait panels of Figure 6.
+FitzHugh-Nagumo condition, for Figure 5b, c and e.
 
 constrained_dominance.py stores only summary numbers. This re-runs a single
 condition through the SAME code path (same model, same linear controller,
