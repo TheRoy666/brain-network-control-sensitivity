@@ -20,7 +20,7 @@ Each stage only needs the data and the stage outputs to its left.
 | Structural connectomes: ADNI (MRtrix3, SIFT2) and HCP | `build_connectomes.sh`, `qc_connectomes.py`, `SCMatrixExtractor.py` | connectomes (not deposited) |
 | HCP head motion, mean framewise displacement per subject | — | `R/cohort/hcp_head_motion.csv` |
 
-Cohorts and acquisition: **Table 1** (`tables/check_tables.py`); regions against timepoints per arm, and the three parcellations: **Figure S1**. Cohort numbers in the text: `P/00_preprocessing/reported_values.py`.
+Cohorts and acquisition: **Table 1** (`tables/check_tables.py`); regions against timepoints per arm, and the three parcellations: **Figure S2**. Cohort numbers in the text: `P/00_preprocessing/reported_values.py`.
 
 ## 01 · Operator divergence
 
@@ -51,7 +51,7 @@ Cohorts and acquisition: **Table 1** (`tables/check_tables.py`); regions against
 | Where the drivers are: how often each region is a top-five driver for the median-τ subject of each arm; where EC sends and receives: out-strength minus in-strength averaged over subjects | `brain_maps.py` | `brain_maps/*.csv` | **Figure 2g–h**, **Figure 1f** |
 | Penalty weights barely move HCP and strongly move ADNI | `graphnet_sensitivity.py`, `compare_sweep_rerun.py` | `graphnet_sensitivity_*.csv` | **Figure 3b–c**, **Table S2** |
 | Block length affects the two rankings differently | `bootstrap_block_length.py` | `block_length_*.csv` | **Figure 3d**, **Table S3** |
-| Receiver-ranking stability rises with head motion in HCP and ADNI-400; driver-ranking stability does not | `hcp_motion_vs_tau.py`, `adni_quality_vs_taustability.py` | `ctrl_definition_comparison_*.csv` with `R/cohort/*` | **Figure S2** (Supplementary S5) |
+| Receiver-ranking stability rises with head motion in HCP and ADNI-400; driver-ranking stability does not | `hcp_motion_vs_tau.py`, `adni_quality_vs_taustability.py` | `ctrl_definition_comparison_*.csv` with `R/cohort/*` | **Figure S1** (Supplementary S5) |
 | Coefficient of variation falls with connection strength, as in Frässle and Stephan (2022) | `frassle_stephan_cross_check.py` | `frassle_stephan_*.csv` | Supplementary Methods |
 | Estimator settings: convergence tested after the update, up to 3000 iterations | `estimator_convergence/` | printed | Methods |
 

@@ -10,13 +10,13 @@ Propagates the uncertainty of the effective-connectivity estimate into the ranki
 | 4 | `graphnet_sensitivity.py`, then `compare_sweep_rerun.py` | nine settings of the ridge and structural-prior penalties, both definitions | `graphnet_sensitivity_*.csv` |
 | 5 | `bootstrap_block_length.py` | block lengths 5 to 100, both definitions | `block_length_*.csv` |
 | 6 | `sensitivity_vs_ntr_dual.py`, then `compare_ntr_rerun.py` | HCP truncated to ADNI's timepoints per region, at the published setting and across the penalty grid | `ntr_*.csv` |
-| 7 | `hcp_motion_vs_tau.py`, `adni_quality_vs_taustability.py` | rank stability against head motion and data-quality measures | printed; Figure S2 is drawn from the files above |
+| 7 | `hcp_motion_vs_tau.py`, `adni_quality_vs_taustability.py` | rank stability against head motion and data-quality measures | printed; Figure S1 is drawn from the files above |
 | 8 | `frassle_stephan_cross_check.py` | connection strength against its variability across resamples | `frassle_stephan_*.csv` |
 | 9 | `nctpy_definition_check.py` | nctpy 1.1.0 and 1.2.0 `ave_control` on planted senders and receivers, against both definitions (runs without data) | printed |
 | 10 | `brain_maps.py` | from the saved ensembles: how often each region is a top-five driver across the 200 resamples, for the subject nearest the cohort median driver τ (checked against `ctrl_definition_comparison_*.csv`), and each region's out-strength minus in-strength averaged over subjects; `export` writes the deposited tables, without per-subject rows | `brain_maps/` |
 | — | `compute_and_save_ec_matrices.py` | point-estimate EC matrices for inspection | — |
 
-Shown in Figures 1f, 2, 3 and S2 and Supplementary Tables S2 and S3.
+Shown in Figures 1f, 2, 3 and S1 and Supplementary Tables S2 and S3.
 
 `reported_values.py` recomputes every number the paper reports for this stage from `results/` and prints it beside the printed value (`make values` runs all stages).
 
