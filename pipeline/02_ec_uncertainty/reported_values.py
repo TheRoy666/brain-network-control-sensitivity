@@ -72,9 +72,8 @@ def main():
     rep.check("intraclass correlation, tau", tw.loc["tau_gu", "icc"], 0.558)
     rep.check("intraclass correlation, top-five overlap", tw.loc["jaccard_gu", "icc"], 0.206)
     rep.check("clustered interval on median tau, lower", tw.loc["tau_gu", "ci_lo_clustered"], 0.881)
-    rep.check("clustered interval on median tau, upper", tw.loc["tau_gu", "ci_hi_clustered"], 0.889)
-    rep.check("clustered interval wider than the independent one (%)", 100 * (tw.loc["tau_gu", "widening"] - 1), 17, digits=0,
-              note="the receiver-ranking run (twin_clustered_ci_HCP_receiver.csv) gives 17%")
+    rep.check("clustered interval on median tau, upper", tw.loc["tau_gu", "ci_hi_clustered"], 0.888)
+    rep.check("clustered interval wider than the independent one (%)", 100 * (tw.loc["tau_gu", "widening"] - 1), 16, digits=0)
     rep.check("complete pairs", int(tw.loc["tau_gu", "n_pairs"]), 119, digits=0)
 
     rep.section("2.4 Frässle and Stephan comparison (Supplementary Methods)")
@@ -222,6 +221,13 @@ def main():
         fr = pd.read_csv(R(f"02_ec_uncertainty/brain_maps/driver_map_{k}.csv")).top5_frequency
         rep.check(f"{k}: driver map frequencies sum to five regions per resample", fr.sum(), 5.0, digits=9)
         rep.check(f"{k}: sender map averages every subject", int(ms.loc[(k, "sender_receiver")].n_subjects), len(c[k]), digits=0)
+    sr = {k: pd.read_csv(R(f"02_ec_uncertainty/brain_maps/sender_receiver_map_{k}.csv")).sign_agreement for k in ("HCP", "ADNI-400")}
+    for k, v in (("HCP", 58), ("ADNI-400", 55)):
+        rep.check(f"2.1 {k}: subjects sharing the sign of the cohort mean at the median region (%)", 100 * sr[k].median(), v, digits=0)
+    rep.check("2.1 HCP regions where at least 75% of subjects share the sign", int((sr["HCP"] >= 0.75).sum()), 23, digits=0)
+    rep.check("2.1 HCP regions in all", len(sr["HCP"]), 410, digits=0)
+    rep.check("2.1 ADNI-400 regions where at least 75% of subjects share the sign", int((sr["ADNI-400"] >= 0.75).sum()), 0, digits=0)
+    rep.check("2.1 ADNI-400 largest share (%)", 100 * sr["ADNI-400"].max(), 71, digits=0)
 
     rep.server_only([
         ("Receiver tau 0.857 with HCP subsampled to an effective TR of 2.88 s", "adni_quality_vs_taustability.py header; HCP stride runs need the HCP timeseries"),

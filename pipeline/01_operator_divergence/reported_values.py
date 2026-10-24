@@ -178,9 +178,31 @@ def main():
 
     rep.server_only([
         ("HCP finite/infinite at T = 1, median 11.7", "pipeline/01_operator_divergence/run_hcp_aud_batch.py (HCP per-subject results are not deposited; see docs/DATA_ACCESS.md)"),
-        ("Synthetic feedforward network: a symmetric operator lowers the computed energy", "no script in this repository"),
     ])
+    synthetic_chains(rep)
     sys.exit(rep.finish())
+
+
+def synthetic_chains(rep, n_seeds=50):
+    """Results 2.1 and Methods 4.6: simulated feedforward chains processed as the cohorts were."""
+    import synthetic_chain_operator_check as SC
+    rep.section("2.1 / 4.6 Simulated feedforward chains (synthetic_chain_operator_check.py, high-variance to quiescent)")
+    r = {}
+    for n in SC.LENGTHS:
+        for seed in range(n_seeds):
+            X, _, ops = SC.operators(n, seed)
+            q, h = SC.states(X)
+            for k in ("functional", "symmetrized"):
+                for horizon in (SC.HORIZON, 3):
+                    r.setdefault((n, k, horizon), []).append(SC.ratio(ops[k], ops["directed"], h, q, horizon))
+    med = {key: float(np.median(v)) for key, v in r.items()}
+    for k, lo, hi in (("functional", 2.28, 5.51), ("symmetrized", 1.25, 3.61)):
+        rep.check(f"{k}: lowest median ratio over chain lengths", min(med[(n, k, SC.HORIZON)] for n in SC.LENGTHS), lo)
+        rep.check(f"{k}: highest median ratio over chain lengths", max(med[(n, k, SC.HORIZON)] for n in SC.LENGTHS), hi)
+    rep.check("ratio above one in every recording of 10 and 20 regions, both operators",
+              all(min(r[(n, k, SC.HORIZON)]) > 1 for n in (10, 20) for k in ("functional", "symmetrized")), True)
+    rep.check("three-step horizon: median ratio below one at 5 and 10 regions, both operators",
+              all(med[(n, k, 3)] < 1 for n in (5, 10) for k in ("functional", "symmetrized")), True)
 
 
 if __name__ == "__main__":

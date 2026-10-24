@@ -45,11 +45,16 @@ def main():
     for m, n in (("fhn", 40), ("sl", 120), ("wc", 20)):
         rep.check(f"{MODELS[m]}: lower-error feasible solution, count", int(use[m].dominates_ltv.sum()), n, digits=0)
         rep.check(f"{MODELS[m]}: conditions", len(use[m]), n, digits=0)
-    for m, v in (("fhn", 0.0011), ("sl", 0.0003), ("wc", 0.0515)):
+    for m, v in (("fhn", 0.0011), ("wc", 0.0515)):
         rep.check(f"{MODELS[m]}: median terminal error relative to linear", (use[m].constrained_err / use[m].ltv_err).median(), v)
     rep.check("FitzHugh–Nagumo: median share of the linear energy used (%)",
               100 * (C["fhn"].constrained_energy / C["fhn"].ltv_energy).median(), 77, digits=0)
-    rep.check("Stuart–Landau: median share of the linear energy used (%)", 100 * C["sl"].energy_frac.median(), 30, digits=0)
+    # S4: Stuart–Landau regimes are summarized separately, the supercritical ones at the anchor
+    sla, sls = C["sl"][C["sl"].regime == "supercritical_ref"], C["sl"][C["sl"].regime.str.startswith("sub")]
+    rep.check("Stuart–Landau anchor: median terminal error relative to linear", (sla.constrained_err / sla.ltv_err).median(), 0.027)
+    rep.check("Stuart–Landau subcritical: median terminal error relative to linear", (sls.constrained_err / sls.ltv_err).median(), 0.0001)
+    rep.check("Stuart–Landau anchor: median share of the linear energy used (%)", 100 * sla.energy_frac.median(), 100, digits=0)
+    rep.check("Stuart–Landau subcritical: median share of the linear energy used (%)", 100 * sls.energy_frac.median(), 8, digits=0)
     allc = pd.concat([use[m] for m in MODELS])
     rep.check("solves in all", len(allc), 180, digits=0)
     rep.check("all feasible", bool(allc.feasible.astype(bool).all()), True)
@@ -93,8 +98,7 @@ def main():
     anchor = cond["sl"][cond["sl"].regime == "supercritical_ref"]
     da = anchor[anchor.dominated_ltv.astype(bool)]
     rep.check("Stuart–Landau, grid matched to FitzHugh–Nagumo (anchor): dominated", int(da.shape[0]), 17, digits=0)
-    rep.check("Stuart–Landau anchor: energy, times less (paper text: 36.3)", np.exp(-np.log(da.dom_energy_ratio_ltv).median()), 36.3,
-              note="36.3 is the median over all six regimes, which S4 says must not be pooled")
+    rep.check("Stuart–Landau anchor: energy, times less", np.exp(-np.log(da.dom_energy_ratio_ltv).median()), 27.6)
     sub = cond["sl"][cond["sl"].regime.str.startswith("sub")]
     ds = sub[sub.dominated_ltv.astype(bool)]
     rep.check("Stuart–Landau subcritical: dominated", len(ds), 59, digits=0)

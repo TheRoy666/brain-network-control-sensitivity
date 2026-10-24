@@ -1,7 +1,8 @@
 name: CI
 
 # Runs everything that needs only this repository: the unit tests, the brain-map
-# self-test and the cell-by-cell check of the paper's tables against results/.
+# self-test, the recomputation of every value reported in the paper from results/,
+# and the cell-by-cell check of the paper's tables against results/.
 # Python and package versions are those used for the paper (requirements.txt).
 
 on:
@@ -31,5 +32,7 @@ jobs:
         run: python -m pytest
       - name: Brain-map self-test
         run: python pipeline/02_ec_uncertainty/brain_maps.py selftest
+      - name: Reported values against results/
+        run: make values
       - name: Tables against results/
         run: make tables
