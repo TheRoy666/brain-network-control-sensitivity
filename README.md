@@ -9,7 +9,7 @@
 
 Code and derived results for
 
-> Roy, R. K., Kothekar, R., Agarwal, K. *How operator specification, estimation uncertainty and linearization shape brain network control.* Manuscript in preparation.
+> Roy, R. K., Agarwal, K. *How operator specification, estimation uncertainty and linearization shape brain network control.* Manuscript in preparation.
 
 Network control theory turns a model of the brain's dynamics into statements about which regions can steer the network and at what energy cost. Three modeling steps sit between the data and those statements, and the paper measures how much each one moves them:
 
